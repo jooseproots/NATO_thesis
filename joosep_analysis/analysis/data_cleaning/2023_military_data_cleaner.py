@@ -25,7 +25,7 @@ countries_list = countries_df["Country"].tolist()
 
 columns_to_keep = [0, 4, 5, 6, 7, 8, 9, 10]
 df = df[columns_to_keep]
-df.columns = ["Country", "Defence budget per capita 2020", "Defence budget per capita 2021", "Defence budget per capita 2022", "Defence budget % GDP prev year 2020", "Defence budget % GDP prev year 2021", "Defence budget % GDP prev year 2022", "Active Armed Forces 2022"]
+df.columns = ["Country", "Defence budget per capita 2020", "Defence budget per capita 2021", "Defence budget per capita 2022", "Defence budget % GDP 2020", "Defence budget % GDP 2021", "Defence budget % GDP 2022", "Active Armed Forces 2022"]
 
 # Remove rows, which are not for single countries
 df = df[df["Country"].isin(countries_list)]
@@ -34,7 +34,7 @@ df = df[~df.apply(lambda row: row.astype(str).str.contains(r'n.k.|^-$', regex=Tr
 
 # Convert to correct data types
 int_cols = ["Defence budget per capita 2020", "Defence budget per capita 2021", "Defence budget per capita 2022", "Active Armed Forces 2022"]
-float_cols = ["Defence budget % GDP prev year 2020", "Defence budget % GDP prev year 2021", "Defence budget % GDP prev year 2022"]
+float_cols = ["Defence budget % GDP 2020", "Defence budget % GDP 2021", "Defence budget % GDP 2022"]
 
 for col in int_cols:
     df[col] = (
@@ -52,6 +52,20 @@ for col in float_cols:
         .str.replace(',', '', regex=False)
         .astype(float)
     )
+
+# Correct inflation to 2024 values
+
+# Inflation factor: 2023 USD to 2024 USD using US CPI estimate
+inflation_factor = 313.7 / 304.7
+per_capita_columns = [
+    "Defence budget per capita 2020",
+    "Defence budget per capita 2021",
+    "Defence budget per capita 2022"
+]
+
+# Apply inflation correction
+for col in per_capita_columns:
+    df[col] = df[col] * inflation_factor
 
 # Reverse the name mappings for the final output
 reverse_mappings = {v: k for k, v in name_mappings.items()}

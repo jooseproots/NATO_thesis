@@ -25,7 +25,7 @@ countries_list = countries_df["Country"].tolist()
 
 columns_to_keep = [0, 4, 5, 6, 7, 8, 9, 10]
 df = df[columns_to_keep]
-df.columns = ["Country", "Defence budget per capita 2021", "Defence budget per capita 2022", "Defence budget per capita 2023", "Defence budget % GDP prev year 2021", "Defence budget % GDP prev year 2022", "Defence budget % GDP prev year 2023", "Active Armed Forces 2023"]
+df.columns = ["Country", "Defence budget per capita 2021", "Defence budget per capita 2022", "Defence budget per capita 2023", "Defence budget % GDP 2021", "Defence budget % GDP 2022", "Defence budget % GDP 2023", "Active Armed Forces 2023"]
 
 # Remove rows, which are not for single countries
 df = df[df["Country"].isin(countries_list)]
@@ -34,7 +34,7 @@ df = df[~df.apply(lambda row: row.astype(str).str.contains(r'n.k.|^-$', regex=Tr
 
 # Convert to correct data types
 int_cols = ["Defence budget per capita 2021", "Defence budget per capita 2022", "Defence budget per capita 2023", "Active Armed Forces 2023"]
-float_cols = ["Defence budget % GDP prev year 2021", "Defence budget % GDP prev year 2022", "Defence budget % GDP prev year 2023"]
+float_cols = ["Defence budget % GDP 2021", "Defence budget % GDP 2022", "Defence budget % GDP 2023"]
 
 for col in int_cols:
     df[col] = (
