@@ -17,15 +17,15 @@ name_mappings = {
     "Czechia": "Czech Republic",
     "North Macedonia": "Macedonia, North",
     "Russia": "Russia [a]",
-    "Türkiye": "Turkiye",
+    "Türkiye": "Turkey",
     "United Kingdom": "United Kingdom*"
 }
 countries_df["Country"] = countries_df["Country"].replace(name_mappings)
 countries_list = countries_df["Country"].tolist()
 
-columns_to_keep = [0, 5, 6, 8, 9, 10]
-df = df.iloc[:, columns_to_keep]
-df.columns = ["Country", "Defence budget per capita prev year", "Defence budget per capita curr year", "Defence budget % GDP prev year", "Defence budget % GDP curr year", "Active Armed Forces"]
+columns_to_keep = [0, 4, 5, 6, 7, 8, 9, 10]
+df = df[columns_to_keep]
+df.columns = ["Country", "Defence budget per capita 2020", "Defence budget per capita 2021", "Defence budget per capita 2022", "Defence budget % GDP prev year 2020", "Defence budget % GDP prev year 2021", "Defence budget % GDP prev year 2022", "Active Armed Forces 2022"]
 
 # Remove rows, which are not for single countries
 df = df[df["Country"].isin(countries_list)]
@@ -33,8 +33,8 @@ df = df[df["Country"].isin(countries_list)]
 df = df[~df.apply(lambda row: row.astype(str).str.contains(r'n.k.|^-$', regex=True).any(), axis=1)]
 
 # Convert to correct data types
-int_cols = ["Defence budget per capita prev year", "Defence budget per capita curr year", "Active Armed Forces"]
-float_cols = ["Defence budget % GDP prev year", "Defence budget % GDP curr year"]
+int_cols = ["Defence budget per capita 2020", "Defence budget per capita 2021", "Defence budget per capita 2022", "Active Armed Forces 2022"]
+float_cols = ["Defence budget % GDP prev year 2020", "Defence budget % GDP prev year 2021", "Defence budget % GDP prev year 2022"]
 
 for col in int_cols:
     df[col] = (
