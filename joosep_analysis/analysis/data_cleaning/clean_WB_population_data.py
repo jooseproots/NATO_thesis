@@ -26,14 +26,15 @@ population_df = pd.read_csv(POP_PATH, skiprows=4)
 population_df = population_df[population_df["Country Name"].isin(countries_list)]
 
 # Keep only country name and selected years
-fields_to_keep = ["Country Name", "2022", "2023"]
+fields_to_keep = ["Country Name", "2021", "2022", "2023"]
 population_df = population_df[fields_to_keep]
 
 # Rename for clarity
-population_df.columns = ["Country", "Population 2022", "Population 2023"]
+population_df.columns = ["Country", "Population 2021", "Population 2022", "Population 2023"]
 
 # Optional: convert to integers (removing missing data or empty strings)
 population_df = population_df.replace('', pd.NA).dropna()
+population_df["Population 2021"] = population_df["Population 2021"].astype(int)
 population_df["Population 2022"] = population_df["Population 2022"].astype(int)
 population_df["Population 2023"] = population_df["Population 2023"].astype(int)
 
