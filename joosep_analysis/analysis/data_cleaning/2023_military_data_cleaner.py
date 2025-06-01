@@ -53,10 +53,10 @@ for col in float_cols:
         .astype(float)
     )
 
-# Correct inflation to 2024 values
+# Correct inflation to 2015 values
 
-# Inflation factor: 2023 USD to 2024 USD using US CPI estimate
-inflation_factor = 313.7 / 304.7
+# Inflation factor: 2023 USD to 2015 USD using US CPI
+inflation_factor = 237.0 / 304.7
 per_capita_columns = [
     "Defence budget per capita 2020",
     "Defence budget per capita 2021",

@@ -53,6 +53,20 @@ for col in float_cols:
         .astype(float)
     )
 
+# Correct inflation to 2015 values
+
+# Inflation factor: 2024 USD to 2015 USD using US CPI
+inflation_factor = 237.0 / 313.7
+per_capita_columns = [
+    "Defence budget per capita 2021",
+    "Defence budget per capita 2022",
+    "Defence budget per capita 2023"
+]
+
+# Apply inflation correction
+for col in per_capita_columns:
+    df[col] = df[col] * inflation_factor
+
 # Reverse the name mappings for the final output
 reverse_mappings = {v: k for k, v in name_mappings.items()}
 df["Country"] = df["Country"].replace(reverse_mappings)

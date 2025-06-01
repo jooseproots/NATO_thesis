@@ -45,10 +45,10 @@ for col in float_cols:
     df[col] = df[col].astype(str).str.replace(',', '', regex=False).astype(float)
 
 
-# Correct inflation to 2024 values
+# Correct inflation to 2015 values
 
-# Inflation factor: 2025 USD to 2024 USD using US CPI estimate
-deflation_factor = 313.7 / 322.3 
+# Inflation factor: 2025 USD to 2015 USD using US CPI estimate
+deflation_factor = 237.0 / 322.3
 per_capita_columns = [
     "Defence budget per capita 2022",
     "Defence budget per capita 2023",
