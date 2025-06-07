@@ -51,6 +51,9 @@ df['Defence budget per capita % change'] = df.groupby('Country')['Defence budget
 # Compute % change from previous year for Defence budget % GDP
 df['Defence budget % GDP % change'] = df.groupby('Country')['Defence budget % GDP'].pct_change(fill_method=None) * 100
 
+# armed forces per capita
+df['Active Armed Forces per capita'] = df['Active Armed Forces'] / df['Population']
+
 
 # --- Save or inspect result ---
 df.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv", index=False)
