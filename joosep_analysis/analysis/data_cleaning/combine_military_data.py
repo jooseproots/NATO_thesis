@@ -1,90 +1,66 @@
-# Ugly code for now :) Got the job done at least
-
 import pandas as pd
 import glob
+import re
 
-# Load each file into a dictionary
-files = {
-    2023: "C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\2023_Military_Balance_budget_personnel_report_cleaned.csv",
-    2024: "C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\2024_Military_Balance_budget_personnel_report_cleaned.csv",
-    2025: "C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\2025_Military_Balance_budget_personnel_report_cleaned.csv"
-}
-
-dfs = []
-
-# Process each file
-for edition_year, file_path in files.items():
+# Step 1: Load and reshape each file
+def process_file(file_path, priority):
     df = pd.read_csv(file_path)
-    
-    # Melt per capita budget
-    df_percap = df.melt(
-        id_vars=["Country"], 
-        value_vars=[col for col in df.columns if "Defence budget per capita" in col],
-        var_name="Metric", 
-        value_name="Defence budget per capita"
-    )
-    df_percap["Year"] = df_percap["Metric"].str.extract(r'(\d{4})').astype(int)
-    
-    # Melt % of GDP
-    df_gdp = df.melt(
-        id_vars=["Country"], 
-        value_vars=[col for col in df.columns if "Defence budget % GDP" in col],
-        var_name="Metric", 
-        value_name="Defence budget % GDP"
-    )
-    df_gdp["Year"] = df_gdp["Metric"].str.extract(r'(\d{4})').astype(int)
-    
-    # Melt active personnel
-    df_troops = df.melt(
-        id_vars=["Country"], 
-        value_vars=[col for col in df.columns if "Active Armed Forces" in col],
-        var_name="Metric", 
-        value_name="Active Armed Forces"
-    )
-    df_troops["Year"] = df_troops["Metric"].str.extract(r'(\d{4})').astype(int)
-    
-    # Merge all three metrics
-    df_merged = df_percap.drop(columns=["Metric"]).merge(
-        df_gdp.drop(columns=["Metric"]), on=["Country", "Year"], how="outer"
-    ).merge(
-        df_troops.drop(columns=["Metric"]), on=["Country", "Year"], how="outer"
-    )
 
-    # Add edition year for duplicate resolution
-    df_merged["Edition"] = edition_year
-    dfs.append(df_merged)
+    # Identify columns
+    budget_cols = [col for col in df.columns if "Defence budget per capita" in col]
+    gdp_cols = [col for col in df.columns if "Defence budget % GDP" in col]
+    active_col = [col for col in df.columns if "Active Armed Forces" in col][0]
+    active_year = int(re.search(r'\d{4}', active_col).group())
 
-# Combine all editions
-df_all = pd.concat(dfs, ignore_index=True)
+    # Melt budget per capita
+    budget_df = df.melt(id_vars=["Country"], value_vars=budget_cols,
+                        var_name="Metric_Year", value_name="Defence budget per capita")
+    budget_df["Year"] = budget_df["Metric_Year"].str.extract(r'(\d{4})').astype(int)
+    budget_df.drop("Metric_Year", axis=1, inplace=True)
 
-# Keep the latest edition for each Country-Year pair
-df_all_sorted = df_all.sort_values(by=["Country", "Year", "Edition"], ascending=[True, True, False])
+    # Melt % GDP
+    gdp_df = df.melt(id_vars=["Country"], value_vars=gdp_cols,
+                     var_name="Metric_Year", value_name="Defence budget % GDP")
+    gdp_df["Year"] = gdp_df["Metric_Year"].str.extract(r'(\d{4})').astype(int)
+    gdp_df.drop("Metric_Year", axis=1, inplace=True)
 
-# df_final = df_all_sorted.drop_duplicates(subset=["Country", "Year"], keep="first").drop(columns=["Edition"])
+    # Merge on Country + Year
+    merged = pd.merge(budget_df, gdp_df, on=["Country", "Year"])
+    merged["Source Priority"] = priority
 
-# Mark duplicates based on Country and Year, keep='first' (latest edition)
-duplicates_mask = df_all_sorted.duplicated(subset=["Country", "Year"], keep="first")
-# Identify rows that have missing Active Armed Forces
-missing_forces_mask = df_all_sorted["Active Armed Forces"].isna()
-# Drop rows that are duplicates AND missing active forces
-drop_mask = duplicates_mask & missing_forces_mask
+    # Extract active personnel for the specific year
+    active_df = df[["Country", active_col]].copy()
+    active_df.rename(columns={active_col: "Active Armed Forces"}, inplace=True)
+    active_df["Year"] = active_year
 
-# Keep only rows that are NOT to be dropped
-df_final = df_all_sorted[~drop_mask].copy()
+    return merged, active_df
 
-# Sort so rows with non-missing Active Armed Forces come first
-df_final = df_final.sort_values(
-    by=["Country", "Year", "Active Armed Forces"], 
-    ascending=[True, True, False]  # False means non-missing / higher values come first
+# Step 2: Process all files
+file_paths = sorted(
+    glob.glob("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\*_Military_Balance_budget_personnel_report_cleaned.csv"),
+    reverse=True
 )
+budget_dfs = []
+active_dfs = []
 
-# Now drop duplicates keeping first occurrence (which will be the row with active forces if exists)
-df_no_duplicates = df_final.drop_duplicates(subset=["Country", "Year"], keep="first").copy()
+for i, file_path in enumerate(file_paths):
+    budget_df, active_df = process_file(file_path, priority=i)
+    budget_dfs.append(budget_df)
+    active_dfs.append(active_df)
 
-# Optional: sort for readability
-df_no_duplicates = df_no_duplicates.sort_values(by=["Country", "Year"]).reset_index(drop=True)
-df_no_duplicates = df_no_duplicates.drop(columns=["Edition"])
+# Step 3: Combine budget/GDP data and deduplicate by latest source
+combined_budget = pd.concat(budget_dfs)
+combined_budget = combined_budget.sort_values(by=["Country", "Year", "Source Priority"])
+combined_budget = combined_budget.drop_duplicates(subset=["Country", "Year"], keep="first").drop(columns=["Source Priority"])
 
-# Save or display
-df_no_duplicates.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\Military_Balance_combined.csv", index=False)
-print("✅ Combined dataset saved successfully.")
+# Step 4: Combine active personnel data (no deduplicate needed, one year per file)
+combined_active = pd.concat(active_dfs)
+combined_active = combined_active.drop_duplicates(subset=["Country", "Year"], keep="first")
+
+# Step 5: Merge everything
+final = pd.merge(combined_budget, combined_active, on=["Country", "Year"], how="left")
+
+# Step 6: Save to CSV
+final.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\combined_military_dataset.csv", index=False)
+
+print("Success!")
