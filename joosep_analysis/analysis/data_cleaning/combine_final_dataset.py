@@ -1,7 +1,7 @@
 import pandas as pd
 
 # --- Load main dataset ---
-main = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\Military_Balance_combined.csv")  # Assuming this has 'Country', 'Year', etc.
+main = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\combined_military_dataset.csv")
 
 # --- Load and reshape GDP dataset ---
 gdp = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_GDP_constant_2015_cleaned.csv")
