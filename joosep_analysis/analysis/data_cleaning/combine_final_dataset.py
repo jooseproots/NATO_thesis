@@ -54,6 +54,17 @@ df['Defence budget % GDP % change'] = df.groupby('Country')['Defence budget % GD
 # armed forces per capita
 df['Active Armed Forces per capita'] = df['Active Armed Forces'] / df['Population']
 
+# 2024 GDP per capita % change gets values 0 as 2024 GDP per capita was filled in with 2023 values
+# Because of that, I also fill the 2024 GDP per capita % change with values from 2023:
+# Identify the 2024 rows where GDP per capita % change is 0 or NaN
+mask_2024 = (df["Year"] == 2024) & ((df["GDP per capita % change"].isna()) | (df["GDP per capita % change"] == 0))
+
+# Create a mapping from 2023 values for each country
+gdp_change_2023 = df[df["Year"] == 2023][["Country", "GDP per capita % change"]].dropna()
+gdp_change_dict = dict(zip(gdp_change_2023["Country"], gdp_change_2023["GDP per capita % change"]))
+
+# Apply the mapping to fill 2024 missing/zero values
+df.loc[mask_2024, "GDP per capita % change"] = df.loc[mask_2024, "Country"].map(gdp_change_dict)
 
 # --- Save or inspect result ---
 df.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv", index=False)
