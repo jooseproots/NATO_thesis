@@ -9,6 +9,11 @@ COUNTRIES_PATH = os.path.join(RAW_DIR, "countries_of_interest.csv")
 
 # Yearly configurations
 YEAR_CONFIGS = {
+    2016: {"skiprows": 0, "inflation_factor": 237.0 / 240.0},
+    2017: {"skiprows": 1, "inflation_factor": 237.0 / 245.1},
+    2018: {"skiprows": 0, "inflation_factor": 237.0 / 251.1},
+    2019: {"skiprows": 0, "inflation_factor": 237.0 / 255.7},
+    2020: {"skiprows": 1, "inflation_factor": 237.0 / 258.8},
     2021: {"skiprows": 2, "inflation_factor": 237.0 / 271.0},
     2022: {"skiprows": 2, "inflation_factor": 237.0 / 292.7},
     2023: {"skiprows": 3, "inflation_factor": 237.0 / 304.7},
@@ -17,7 +22,7 @@ YEAR_CONFIGS = {
 }
 
 # Process each year
-for year in range(2021, 2026):
+for year in range(2016, 2026):
     print(f"Processing year {year}...")
 
     # Country name mappings
@@ -32,7 +37,7 @@ for year in range(2021, 2026):
     if year == 2025:
         name_mappings["Germany"] = "Germany*"
 
-    if year in [2021, 2022, 2023]:
+    if year in [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]:
         name_mappings["Türkiye"] = "Turkey" 
 
     reverse_mappings = {v: k for k, v in name_mappings.items()}

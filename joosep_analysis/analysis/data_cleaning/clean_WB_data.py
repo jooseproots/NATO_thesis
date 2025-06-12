@@ -8,7 +8,7 @@ CLEAN_DIR = os.path.join(BASE_DIR, "clean_data")
 COUNTRIES_PATH = os.path.join(RAW_DIR, "countries_of_interest.csv")
 
 # Desired output years
-YEARS = ["2019", "2020", "2021", "2022", "2023", "2024"]
+YEARS = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"]
 
 # Country name mappings
 NAME_MAPPINGS = {
