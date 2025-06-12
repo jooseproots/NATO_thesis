@@ -50,7 +50,6 @@ for year in range(2021, 2026):
 
     # Select and rename columns
     columns_to_keep = [0, 4, 5, 6, 7, 8, 9, 10]
-    ############################## TODO: continue here ################################
     df = df[columns_to_keep]
     df.columns = [
         "Country",
@@ -91,4 +90,4 @@ for year in range(2021, 2026):
     df = df.reset_index(drop=True)
     df.to_csv(clean_file, index=False)
 
-print("✅ All files processed and saved.")
+print("All files processed and saved.")
