@@ -5,8 +5,8 @@ import scipy.stats
 
 df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
 
-df_2023 = df[df["Year"] == 2022].copy()
-df_2023 = df_2023.drop(columns=["Year"])
+df_single_year = df[df["Year"] == 2023].copy()
+df_single_year = df_single_year.drop(columns=["Year"])
 
 # Convert relevant columns to numeric if needed
 numeric_cols = [
@@ -18,25 +18,25 @@ numeric_cols = [
 ]
 
 # Convert columns to numeric (in case of any string entries)
-df_2023[numeric_cols] = df_2023[numeric_cols].apply(pd.to_numeric, errors='coerce')
+df_single_year[numeric_cols] = df_single_year[numeric_cols].apply(pd.to_numeric, errors='coerce')
 
-df_2023[numeric_cols] = df_2023[numeric_cols].replace(0, np.nan)
+df_single_year[numeric_cols] = df_single_year[numeric_cols].replace(0, np.nan)
 
 # Drop rows with missing values
-df_2023_clean = df_2023.dropna(subset=numeric_cols).copy()
+df_single_year_clean = df_single_year.dropna(subset=numeric_cols).copy()
 
 log_cols = ['Active Armed Forces per capita', 'Active Armed Forces', 'Population', 'GDP (2015 USD)', 'GDP per capita', 'Defence budget per capita']
 for col in log_cols:
-    df_2023_clean[f"log_{col}"] = np.log(df_2023_clean[col])
+    df_single_year_clean[f"log_{col}"] = np.log(df_single_year_clean[col])
 
 # Alternative approach:
 target = 'log_Active Armed Forces per capita'
 results = {}
 
-for col in df_2023_clean.columns:
+for col in df_single_year_clean.columns:
     if col != target and col != 'Country':
         # Drop missing values pairwise
-        data = df_2023_clean[[target, col]].dropna()
+        data = df_single_year_clean[[target, col]].dropna()
         if len(data) > 2:  # Ensure there's enough data to compute
             r, p = scipy.stats.pearsonr(data[target], data[col])
             results[col] = {'correlation': r, 'p-value': p}
