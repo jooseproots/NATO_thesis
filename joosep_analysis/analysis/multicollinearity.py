@@ -24,8 +24,8 @@ for var in variables_to_analyze:
 demeaned_vars = [f'{var}_demeaned' for var in variables_to_analyze]
 df_demeaned = df[demeaned_vars]
 
-df_demeaned = df_demeaned.drop("Defence budget % GDP_demeaned", axis=1)
-df_demeaned = df_demeaned.drop("Defence budget % GDP % change_demeaned", axis=1)
+df_demeaned = df_demeaned.drop("log_Defence budget per capita_demeaned", axis=1)
+df_demeaned = df_demeaned.drop("Defence budget per capita % change_demeaned", axis=1)
 
 # Calculate VIF for each explanatory variable
 vif_df = pd.DataFrame({

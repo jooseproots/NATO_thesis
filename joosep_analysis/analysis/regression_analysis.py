@@ -15,8 +15,8 @@ df = df.set_index(['Country', 'Year'])
 
 y = df["log_Active Armed Forces per capita"]
 X = df[["Unemployment rate", "Secondary education attainment rate", "log_GDP per capita", 
-        "log_Defence budget per capita", "Defence budget % GDP", "GDP per capita % change", 
-        "Defence budget per capita % change", "Defence budget % GDP % change"]] # can add "Education Dummy"
+        "Defence budget % GDP", "GDP per capita % change", 
+        "Defence budget % GDP % change"]] # can add "Education Dummy"
 
 # Run Fixed Effects model
 model = linearmodels.PanelOLS(y, X, entity_effects=True)

@@ -69,8 +69,8 @@ df['Active Armed Forces per capita'] = df['Active Armed Forces'] / df['Populatio
 
 df = df[
     (~df["Country"].isin(["China", "Iceland"])) &              # Exclude China (not enough education data) and Iceland (No active military)
-    (~df["Year"].isin([2013, 2014, 2024])) &                   # Exclude years 2013, 2014, because they have no armed forces data and 2024, because it is mostly imputed values
-    (df["Education Interpolated"] == False)                    # Exclude interpolated and filled education values
+    (~df["Year"].isin([2013, 2014, 2024]))                    # Exclude years 2013, 2014, because they have no armed forces data and 2024, because it is mostly imputed values
+    # (df["Education Interpolated"] == False)                    # Exclude interpolated and filled education values
 ]
 
 df = df.reset_index(drop=True)
