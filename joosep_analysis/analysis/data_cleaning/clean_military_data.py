@@ -89,6 +89,9 @@ for year in range(2016, 2026):
     for col in per_capita_cols:
         df[col] = df[col] * config["inflation_factor"]
 
+    # Armed forces is in thousands, multiply to get flat number
+    df[f"Active Armed Forces {year - 1}"] = df[f"Active Armed Forces {year - 1}"] * 1000
+
     # Reverse name mappings for output
     df["Country"] = df["Country"].replace(reverse_mappings)
 
