@@ -12,9 +12,9 @@ df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\cle
 # Also remove 2024 data as it is mostly filled in/interpolated from 2023 values
 
 df = df[
-    (~df["Country"].isin(["Russia", "China"]))                  # Exclude Russia and China
-    (df["Year"] != 2024)                                        # Exclude year 2024
-    # (df["Country"].isin(["Estonia", "Latvia", "Lithuania"]))    # Test for Baltics
+    (~df["Country"].isin(["China", "Iceland"])) &              # Exclude China (not enough education data) and Iceland (No active military)
+    (~df["Year"].isin([2013, 2014, 2024]))                     # Exclude year 2024
+    # (df["Education Interpolated"] == False)                    # Exclude interpolated and filled education values
 ]
 
 df = df.reset_index(drop=True)
@@ -35,10 +35,13 @@ numeric_cols = [
 # Convert columns to numeric (in case of any string entries)
 df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
 
-df[numeric_cols] = df[numeric_cols].replace(0, np.nan)
+df["Active Armed Forces"] = df["Active Armed Forces"].replace(0, np.nan) # replacing nulls with none and removing them because a log transformation can't handle nulls
 
 # Drop rows with missing values
-df_clean = df.dropna(subset=numeric_cols).copy()
+df_clean = df.dropna(subset=["Active Armed Forces"]).copy()
+
+# Dummy variable for sensitivity analysis on interpolated values
+df_clean["Education Dummy"] = df_clean["Education Interpolated"].astype(int)
 
 log_cols = ["Active Armed Forces per capita", "GDP per capita", "Defence budget per capita"] # 'Active Armed Forces', 'Population', 'GDP (2015 USD)'
 for col in log_cols:
@@ -54,10 +57,9 @@ df_clean = df_clean.set_index(['Country', 'Year'])
 y = df_clean["log_Active Armed Forces per capita"]
 X = df_clean[["Unemployment rate", "Secondary education attainment rate", "log_GDP per capita", 
               "log_Defence budget per capita", "Defence budget % GDP", "GDP per capita % change", 
-              "Defence budget per capita % change", "Defence budget % GDP % change"]]
+              "Defence budget per capita % change", "Defence budget % GDP % change", "Education Dummy"]] # , "Education Dummy"
 
 # Run Fixed Effects model
 model = linearmodels.PanelOLS(y, X, entity_effects=True)
-# model = linearmodels.PanelOLS.from_formula('outcome ~ var1 + var2 + EntityEffects', data=df)
 results = model.fit()
 print(results.summary)
