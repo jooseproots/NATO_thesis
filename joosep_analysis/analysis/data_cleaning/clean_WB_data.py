@@ -48,8 +48,28 @@ def clean_and_transform_dataset(name, filename, value_name, interpolate=False):
     # Interpolate across year columns if needed
     df[YEARS] = df[YEARS].apply(pd.to_numeric, errors='coerce')
     if interpolate:
+        # Create a mask of originally missing values
+        was_missing = df[YEARS].isna()
+
         df[YEARS] = df[YEARS].interpolate(axis=1, limit_direction='both')
         df[YEARS] = df[YEARS].ffill(axis=1).bfill(axis=1)
+
+        # After interpolation, detect which values changed from missing to filled
+        interpolated_mask = was_missing & df[YEARS].notna()
+
+        # Save interpolation flags if this is the education dataset
+        if name == "WB_upper_secondary_education_rates":
+            interpolated_mask["Country"] = df["Country Name"]
+            interpolated_flag_df = interpolated_mask[["Country"] + YEARS]
+            interpolated_flag_df.columns = ["Country"] + [f"Interpolated Secondary Education {year}" for year in YEARS]
+
+            # Reverse country name mappings
+            interpolated_flag_df["Country"] = interpolated_flag_df["Country"].replace(REVERSE_MAPPINGS)
+
+            # Save the mask to a CSV
+            interp_output = os.path.join(CLEAN_DIR, "WB_education_interpolation_flags.csv")
+            interpolated_flag_df.to_csv(interp_output, index=False)
+            print(f"Saved interpolation flags to {interp_output}")
 
     # Construct final DataFrame
     df_final = df[["Country Name"] + YEARS]

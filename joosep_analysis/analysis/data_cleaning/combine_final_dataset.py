@@ -18,10 +18,17 @@ unemp = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\
 unemp_long = unemp.melt(id_vars="Country", var_name="Year", value_name="Unemployment rate")
 unemp_long["Year"] = unemp_long["Year"].str.extract("(\d{4})").astype(int)
 
+# --- Load education interpolation flag ---
+edu_interp = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_education_interpolation_flags.csv")
+edu_interp_long = edu_interp.melt(id_vars="Country", var_name="Year", value_name="Education Interpolated")
+edu_interp_long["Year"] = edu_interp_long["Year"].str.extract("(\d{4})").astype(int)
+
 # --- Load and reshape Secondary Education dataset ---
 edu = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_upper_secondary_education_rates_cleaned.csv")
 edu_long = edu.melt(id_vars="Country", var_name="Year", value_name="Secondary education attainment rate")
 edu_long["Year"] = edu_long["Year"].str.extract("(\d{4})").astype(int)
+
+edu_long = edu_long.merge(edu_interp_long, on=["Country", "Year"], how="left")
 
 # --- Merge all with main dataset ---
 df = main.merge(pop_long, on=["Country", "Year"], how="left")

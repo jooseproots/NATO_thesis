@@ -1,0 +1,35 @@
+Country,Interpolated Secondary Education 2014,Interpolated Secondary Education 2015,Interpolated Secondary Education 2016,Interpolated Secondary Education 2017,Interpolated Secondary Education 2018,Interpolated Secondary Education 2019,Interpolated Secondary Education 2020,Interpolated Secondary Education 2021,Interpolated Secondary Education 2022,Interpolated Secondary Education 2023,Interpolated Secondary Education 2024
+Albania,False,False,False,False,False,False,True,False,False,True,True
+Belgium,False,False,False,False,False,False,False,False,False,True,True
+Bulgaria,False,False,False,False,False,False,False,False,False,True,True
+Canada,False,False,False,False,False,False,False,False,False,False,True
+China,True,True,True,True,True,True,False,True,True,True,True
+Czechia,False,False,False,False,False,False,False,False,False,True,True
+Germany,False,False,False,False,False,False,False,False,False,True,True
+Denmark,False,False,False,False,False,False,False,False,False,True,True
+Spain,False,False,False,False,False,False,False,False,False,False,True
+Estonia,False,False,False,False,False,False,False,False,False,True,True
+Finland,False,False,False,False,False,False,False,False,False,True,True
+France,False,False,False,False,False,False,False,False,False,False,True
+United Kingdom,False,False,False,False,False,False,False,False,False,False,True
+Greece,False,False,False,False,False,False,False,False,False,True,True
+Croatia,False,False,False,False,False,False,False,False,False,True,True
+Hungary,False,False,False,False,False,False,False,False,False,True,True
+Iceland,False,False,False,False,False,False,False,False,False,True,True
+Italy,False,False,False,False,False,False,False,False,False,True,True
+Lithuania,False,False,False,False,False,False,False,False,False,True,True
+Luxembourg,False,False,False,False,False,False,False,False,False,True,True
+Latvia,False,False,False,False,False,False,False,False,False,False,True
+North Macedonia,False,False,False,False,False,False,False,False,False,False,True
+Montenegro,False,False,False,False,False,False,False,False,True,True,True
+Netherlands,False,False,False,False,False,False,False,False,False,True,True
+Norway,False,False,False,False,False,False,False,False,False,True,True
+Poland,False,False,False,False,False,False,False,False,False,False,True
+Portugal,False,False,False,False,False,False,False,False,False,False,True
+Romania,False,False,False,False,False,False,False,False,False,True,True
+Russia,False,False,False,False,False,False,False,False,False,False,True
+Slovakia,False,False,False,False,False,False,False,False,False,True,True
+Slovenia,False,False,False,False,False,False,False,False,False,True,True
+Sweden,False,False,False,False,False,False,False,False,False,True,True
+Türkiye,False,False,False,False,False,False,False,False,False,False,True
+United States,False,False,False,False,False,False,False,False,False,False,True
