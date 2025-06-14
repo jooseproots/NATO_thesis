@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # --- Load main dataset ---
 main = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\combined_military_dataset.csv")
@@ -61,18 +62,45 @@ df['Defence budget % GDP % change'] = df.groupby('Country')['Defence budget % GD
 # armed forces per capita
 df['Active Armed Forces per capita'] = df['Active Armed Forces'] / df['Population']
 
-# 2024 GDP per capita % change gets values 0 as 2024 GDP per capita was filled in with 2023 values
-# Because of that, I also fill the 2024 GDP per capita % change with values from 2023:
-# Identify the 2024 rows where GDP per capita % change is 0 or NaN
-mask_2024 = (df["Year"] == 2024) & ((df["GDP per capita % change"].isna()) | (df["GDP per capita % change"] == 0))
 
-# Create a mapping from 2023 values for each country
-gdp_change_2023 = df[df["Year"] == 2023][["Country", "GDP per capita % change"]].dropna()
-gdp_change_dict = dict(zip(gdp_change_2023["Country"], gdp_change_2023["GDP per capita % change"]))
+###########################
+# Finalize for regression #
+###########################
 
-# Apply the mapping to fill 2024 missing/zero values
-df.loc[mask_2024, "GDP per capita % change"] = df.loc[mask_2024, "Country"].map(gdp_change_dict)
+df = df[
+    (~df["Country"].isin(["China", "Iceland"])) &              # Exclude China (not enough education data) and Iceland (No active military)
+    (~df["Year"].isin([2013, 2014, 2024])) &                   # Exclude years 2013, 2014, because they have no armed forces data and 2024, because it is mostly imputed values
+    (df["Education Interpolated"] == False)                    # Exclude interpolated and filled education values
+]
+
+df = df.reset_index(drop=True)
+
+# Convert relevant columns to numeric if needed
+numeric_cols_new = [
+    'Defence budget per capita', 'Defence budget % GDP', 'Active Armed Forces',
+    'Population', 'GDP (2015 USD)', 'Unemployment rate',
+    'Secondary education attainment rate', 'GDP per capita',
+    'GDP per capita % change', 'Defence budget per capita % change',
+    'Defence budget % GDP % change', 'Active Armed Forces per capita'
+]
+
+# Convert columns to numeric (in case of any string entries)
+df[numeric_cols_new] = df[numeric_cols_new].apply(pd.to_numeric, errors='coerce')
+
+df["Active Armed Forces"] = df["Active Armed Forces"].replace(0, np.nan) # replacing nulls with none and removing them because a log transformation can't handle nulls
+
+# Drop rows with missing values
+df_clean = df.dropna(subset=["Active Armed Forces"]).copy()
+
+log_cols = ["Active Armed Forces per capita", "GDP per capita", "Defence budget per capita"]
+for col in log_cols:
+    df_clean[f"log_{col}"] = np.log(df_clean[col])
+
+# Select final data
+df_final = df_clean[["Country", "Year", "log_Active Armed Forces per capita", "Unemployment rate", "Secondary education attainment rate", 
+               "log_GDP per capita", "log_Defence budget per capita", "Defence budget % GDP", "GDP per capita % change", 
+               "Defence budget per capita % change", "Defence budget % GDP % change", "Education Interpolated"]]
 
 # --- Save or inspect result ---
-df.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv", index=False)
+df_final.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv", index=False)
 print("Final dataset saved")
