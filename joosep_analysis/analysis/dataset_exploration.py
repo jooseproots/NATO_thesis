@@ -8,8 +8,8 @@ print(df.info())
 
 # Decribe columns
 columns_to_check = [
-    "Unemployment rate", "Secondary education attainment rate", "GDP per capita",
-    "Defence budget per capita", "Defence budget % GDP", "GDP per capita % change",
+    "log_Active Armed Forces per capita", "Unemployment rate", "Secondary education attainment rate", "log_GDP per capita",
+    "log_Defence budget per capita", "Defence budget % GDP", "GDP per capita % change",
     "Defence budget per capita % change", "Defence budget % GDP % change"
 ]
 
@@ -59,3 +59,11 @@ fig.update_layout(
 )
 
 fig.show()
+
+
+# Interpolation numbers
+total_interpolated = df["Education Interpolated"].sum()
+print("Total interpolated values:", total_interpolated)
+
+interpolated_per_country = df[df["Education Interpolated"] == True].groupby("Country").size()
+print(interpolated_per_country)
