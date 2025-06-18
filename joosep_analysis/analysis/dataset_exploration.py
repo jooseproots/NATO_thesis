@@ -1,6 +1,8 @@
 import pandas as pd
 import scipy.stats
 import plotly.express
+import plotly.graph_objects as go
+import plotly.subplots
 
 df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
 
@@ -14,6 +16,25 @@ columns_to_check = [
 ]
 
 print(df[columns_to_check].describe())
+
+
+# Plot histograms:
+# Determine subplot grid size (e.g., 3 columns)
+cols = 3
+rows = (len(columns_to_check) + cols - 1) // cols
+
+fig = plotly.subplots.make_subplots(rows=rows, cols=cols, subplot_titles=columns_to_check)
+
+for i, col in enumerate(columns_to_check):
+    row = i // cols + 1
+    col_pos = i % cols + 1
+    fig.add_trace(
+        go.Histogram(x=df[col], nbinsx=40, name=col, marker_color='steelblue'),
+        row=row, col=col_pos
+    )
+
+fig.update_layout(height=300 * rows, width=900, title_text="Distributions of Variables")
+fig.show()
 
 
 # Z score outliers
