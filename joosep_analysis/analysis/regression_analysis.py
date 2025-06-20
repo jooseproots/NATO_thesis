@@ -1,5 +1,6 @@
 import linearmodels
 import pandas as pd
+# import matplotlib.pyplot as plt
 
 df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
 
@@ -22,3 +23,13 @@ X = df[["Unemployment rate", "Secondary education attainment rate", "log_GDP per
 model = linearmodels.PanelOLS(y, X, entity_effects=True)
 results = model.fit(cov_type="clustered", cluster_entity=True)
 print(results.summary)
+
+# residuals = results.resids
+# fitted = results.fitted_values
+
+# plt.scatter(fitted, residuals, alpha=0.5)
+# plt.axhline(0, color='red', linestyle='--')
+# plt.xlabel('Fitted values')
+# plt.ylabel('Residuals')
+# plt.title('Residuals vs Fitted Values')
+# plt.show()
