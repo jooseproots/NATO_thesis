@@ -51,13 +51,6 @@ rename_dict = {
 
 correlation_matrix.rename(index=rename_dict, columns=rename_dict, inplace=True)
 
-# Nicer font
-plt.rcParams.update({
-    "text.usetex": False,
-    "font.family": "serif",
-    "font.serif": ["Times New Roman"],
-})
-
 # Set the figure size and style
 plt.figure(figsize=(10, 8))
 sns.set_theme(style='white', font_scale=1.1)
@@ -76,8 +69,8 @@ ax = sns.heatmap(
 
 # Set font for x and y tick labels
 for label in (ax.get_xticklabels() + ax.get_yticklabels()):
-    label.set_fontname("Times New Roman")  # or your desired font
-    label.set_fontsize(11)  # adjust as needed
+    label.set_fontname("sans-serif")  # or your desired font
+    label.set_fontsize(13)  # adjust as needed
 
 # Add title and show plot
 # plt.title('Correlation Matrix', pad=20)
