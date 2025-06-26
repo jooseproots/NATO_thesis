@@ -1,5 +1,6 @@
 import pandas as pd
 import statsmodels.stats.outliers_influence
+import os
 
 CLEAN_DIR = "clean_data"
 
