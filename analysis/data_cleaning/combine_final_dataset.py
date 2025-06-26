@@ -1,31 +1,35 @@
 import pandas as pd
 import numpy as np
+import os
 
-# --- Load main dataset ---
-main = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\combined_military_dataset.csv")
+CLEAN_DIR = "clean_data"
 
-# --- Load and reshape GDP dataset ---
-gdp = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_GDP_constant_2015_cleaned.csv")
+# --- Load datasets ---
+main = pd.read_csv(os.path.join(CLEAN_DIR, "combined_military_dataset.csv"))
+gdp = pd.read_csv(os.path.join(CLEAN_DIR, "WB_GDP_constant_2015_cleaned.csv"))
+pop = pd.read_csv(os.path.join(CLEAN_DIR, "WB_Total_population_over_years_cleaned.csv"))
+unemp = pd.read_csv(os.path.join(CLEAN_DIR, "WB_unemployment_rates_cleaned.csv"))
+edu_interp = pd.read_csv(os.path.join(CLEAN_DIR, "WB_education_interpolation_flags.csv"))
+edu = pd.read_csv(os.path.join(CLEAN_DIR, "WB_upper_secondary_education_rates_cleaned.csv"))
+
+
+# --- reshape GDP dataset ---
 gdp_long = gdp.melt(id_vars="Country", var_name="Year", value_name="GDP (2015 USD)")
 gdp_long["Year"] = gdp_long["Year"].str.extract("(\d{4})").astype(int)
 
-# --- Load and reshape Population dataset ---
-pop = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_Total_population_over_years_cleaned.csv")
+# --- reshape Population dataset ---
 pop_long = pop.melt(id_vars="Country", var_name="Year", value_name="Population")
 pop_long["Year"] = pop_long["Year"].str.extract("(\d{4})").astype(int)
 
-# --- Load and reshape Unemployment dataset ---
-unemp = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_unemployment_rates_cleaned.csv")
+# --- reshape Unemployment dataset ---
 unemp_long = unemp.melt(id_vars="Country", var_name="Year", value_name="Unemployment rate")
 unemp_long["Year"] = unemp_long["Year"].str.extract("(\d{4})").astype(int)
 
-# --- Load education interpolation flag ---
-edu_interp = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_education_interpolation_flags.csv")
+# --- education interpolation flag ---
 edu_interp_long = edu_interp.melt(id_vars="Country", var_name="Year", value_name="Education Interpolated")
 edu_interp_long["Year"] = edu_interp_long["Year"].str.extract("(\d{4})").astype(int)
 
-# --- Load and reshape Secondary Education dataset ---
-edu = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\WB_upper_secondary_education_rates_cleaned.csv")
+# --- reshape Secondary Education dataset ---
 edu_long = edu.melt(id_vars="Country", var_name="Year", value_name="Secondary education attainment rate")
 edu_long["Year"] = edu_long["Year"].str.extract("(\d{4})").astype(int)
 
@@ -70,7 +74,6 @@ df['Active Armed Forces per capita'] = df['Active Armed Forces'] / df['Populatio
 df = df[
     (~df["Country"].isin(["China", "Iceland"])) &              # Exclude China (not enough education data) and Iceland (No active military)
     (~df["Year"].isin([2013, 2014, 2024]))                    # Exclude years 2013, 2014, because they have no armed forces data and 2024, because it is mostly imputed values
-    # (df["Education Interpolated"] == False)                    # Exclude interpolated and filled education values
 ]
 
 df = df.reset_index(drop=True)
@@ -102,5 +105,5 @@ df_final = df_clean[["Country", "Year", "log_Active Armed Forces per capita", "U
                "Defence budget per capita % change", "Defence budget % GDP % change", "Education Interpolated"]]
 
 # --- Save or inspect result ---
-df_final.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv", index=False)
+df_final.to_csv(os.path.join(CLEAN_DIR, "final_dataset.csv"), index=False)
 print("Final dataset saved")

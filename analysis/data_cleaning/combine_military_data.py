@@ -1,6 +1,9 @@
 import pandas as pd
 import glob
 import re
+import os
+
+CLEAN_DIR = "clean_data"
 
 # Step 1: Load and reshape each file
 def process_file(file_path, priority):
@@ -37,7 +40,7 @@ def process_file(file_path, priority):
 
 # Step 2: Process all files
 file_paths = sorted(
-    glob.glob("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\*_Military_Balance_budget_personnel_report_cleaned.csv"),
+    glob.glob(os.path.join(CLEAN_DIR, "*_Military_Balance_budget_personnel_report_cleaned.csv")),
     reverse=True
 )
 budget_dfs = []
@@ -61,6 +64,6 @@ combined_active = combined_active.drop_duplicates(subset=["Country", "Year"], ke
 final = pd.merge(combined_budget, combined_active, on=["Country", "Year"], how="left")
 
 # Step 6: Save to CSV
-final.to_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\combined_military_dataset.csv", index=False)
+final.to_csv(os.path.join(CLEAN_DIR, "combined_military_dataset.csv"), index=False)
 
 print("Success!")

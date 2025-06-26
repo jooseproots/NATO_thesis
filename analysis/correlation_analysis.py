@@ -1,8 +1,11 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 
-df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
+CLEAN_DIR = "clean_data"
+
+df = pd.read_csv(os.path.join(CLEAN_DIR, "final_dataset.csv"))
 
 df['Year'] = df['Year'].astype(int)
 
@@ -28,10 +31,6 @@ df_demeaned = df[demeaned_vars]
 
 # Compute Pearson correlation matrix
 correlation_matrix = df_demeaned.corr()
-
-# print(correlation_matrix.round(2))
-# latex_table = correlation_matrix.round(2).to_latex(index=True, float_format="%.2f")
-# print(latex_table)
 
 
 # Plot the correlation matrix as a heatmap.

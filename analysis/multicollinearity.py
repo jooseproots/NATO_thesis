@@ -1,7 +1,9 @@
 import pandas as pd
 import statsmodels.stats.outliers_influence
 
-df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
+CLEAN_DIR = "clean_data"
+
+df = pd.read_csv(os.path.join(CLEAN_DIR, "final_dataset.csv"))
 
 df['Year'] = df['Year'].astype(int)
 

@@ -1,8 +1,11 @@
 import linearmodels
 import pandas as pd
+import os
 # import matplotlib.pyplot as plt
 
-df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
+CLEAN_DIR = "clean_data"
+
+df = pd.read_csv(os.path.join(CLEAN_DIR, "final_dataset.csv"))
 
 ##################
 # Run regression #

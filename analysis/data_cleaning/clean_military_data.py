@@ -1,10 +1,10 @@
 import pandas as pd
 import os
+import sys
 
 # File paths
-BASE_PATH = "C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis"
-RAW_DIR = os.path.join(BASE_PATH, "raw_data")
-CLEAN_DIR = os.path.join(BASE_PATH, "clean_data")
+RAW_DIR = "raw_data"
+CLEAN_DIR = "clean_data"
 COUNTRIES_PATH = os.path.join(RAW_DIR, "countries_of_interest.csv")
 
 # Yearly configurations

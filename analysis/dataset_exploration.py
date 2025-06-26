@@ -3,8 +3,11 @@ import scipy.stats
 import plotly.express
 import plotly.graph_objects as go
 import plotly.subplots
+import os
 
-df = pd.read_csv("C:\\Users\\joose\\Git_repos\\NATO_thesis\\joosep_analysis\\clean_data\\final_dataset.csv")
+CLEAN_DIR = "clean_data"
+
+df = pd.read_csv(os.path.join(CLEAN_DIR, "final_dataset.csv"))
 
 print(df.info())
 
