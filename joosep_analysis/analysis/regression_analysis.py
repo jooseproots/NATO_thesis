@@ -26,6 +26,8 @@ X = df[["Unemployment rate", "Secondary education attainment rate", "log_GDP per
 model = linearmodels.PanelOLS(y, X, entity_effects=True, time_effects=True)
 results = model.fit(cov_type="clustered", cluster_entity=True)
 print(results.summary)
+print(results.rsquared)
+print(results.rsquared_inclusive)
 
 # residuals = results.resids
 # fitted = results.fitted_values

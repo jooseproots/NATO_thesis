@@ -40,13 +40,13 @@ correlation_matrix = df_demeaned.corr()
 rename_dict = {
     'log_Active Armed Forces per capita_demeaned': 'Armed Forces per cap.',
     'log_GDP per capita_demeaned': 'GDP per cap.',
-    'log_Defence budget per capita_demeaned': 'Def. budget per cap.',
+    'log_Defence budget per capita_demeaned': 'Def. spend. per cap.',
     'Unemployment rate_demeaned': 'Unemployment Rate',
     'Secondary education attainment rate_demeaned': 'Secondary education rate',
-    'Defence budget % GDP_demeaned': 'Def. budget % GDP',
+    'Defence budget % GDP_demeaned': 'Def. spend. % GDP',
     'GDP per capita % change_demeaned': 'GDP per cap. % change',
-    'Defence budget per capita % change_demeaned': 'Def. budget per cap. % change',
-    'Defence budget % GDP % change_demeaned': 'Def. budget % GDP % change'
+    'Defence budget per capita % change_demeaned': 'Def. spend. per cap. % change',
+    'Defence budget % GDP % change_demeaned': 'Def. spend. % GDP % change'
 }
 
 correlation_matrix.rename(index=rename_dict, columns=rename_dict, inplace=True)
